@@ -8,7 +8,7 @@
     <style>
         .myApp {
             width: 100%;
-            height: 850px;
+            height: 870px;
             text-align: center;
             margin-top: 1%;
         }
@@ -34,8 +34,9 @@
         }
 
         .leftMain {
-            height: 78%;
+            height: 90%;
         }
+
         .rightMain {
             height: 90%;
             margin: 3%;
@@ -45,7 +46,7 @@
         .domainMain {
             overflow: auto;
             background-color: #CCC;
-            height: 100%;
+            height: 95%;
         }
 
         .domain {
@@ -84,39 +85,60 @@
         .rowName {
             display: inline-block;
         }
+
+        .queryMain {
+            position: fixed;
+            width: 40%;
+            height: 90%;
+            background-color: #888;
+            border: solid;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
+    <div id="queryMain" class="queryMain" hidden>
+        <br>
+        <br>
+        <br>
+        <input id="txtFindId" type="text" placeholder="id">
+        <button onclick="findId()">id search</button>&ensp;&ensp;&ensp;&ensp;&ensp;
+        <input id="txtfindKeyword" type="text" placeholder="keyword">
+        <button onclick="findKeyword()">keyword search</button>
+        <button onclick="myView.toggleQuery()">close query</button>
+        <hr>
+        <div class="leftMain">
+            <div class="domain">
+                switch
+                <hr>
+                <div id="domainSwitch" class="domainMain"></div>
+            </div>
+            <div class="domain">
+                variable
+                <hr>
+                <div id="domainVariable" class="domainMain"></div>
+            </div>
+        </div>
+    </div>
     <div class="myApp">
         <div class="left">
-            <div class="leftTop">
-                <h3>parameterQuery</h3>
-                <input id="jsons" type="file" accept=".json" hidden multiple onchange="loadSystemJson()">
-                <button
-                    onclick="document.getElementById('jsons').value='';document.getElementById('jsons').click()">Load
-                    all
-                    jsons</button>(especially for "System.json")
-                <br>
-                <br>
-                <input id="txtFindId" type="text" placeholder="id">
-                <button onclick="findId()">id search</button>&ensp;&ensp;&ensp;&ensp;&ensp;
-                <input id="txtfindKeyword" type="text" placeholder="keyword">
-                <button onclick="findKeyword()">keyword search</button>
-                <br>
-                <br>
-                <hr>
-            </div>
+            <h3>parameterQuery</h3>
+            <input id="jsons" type="file" accept=".json" hidden multiple onchange="loadSystemJson()">
+            <button onclick="document.getElementById('jsons').value='';document.getElementById('jsons').click()">Load
+                all
+                jsons</button>(especially for "System.json")
+            <button onclick="myView.toggleQuery()">open query</button>
             <div class="leftMain">
                 <div class="domain">
                     switch
                     <hr>
-                    <div id="domainSwitch" class="domainMain"></div>
+                    <div id="domainAllSwitch" class="domainMain"></div>
                 </div>
                 <div class="domain">
                     variable
                     <hr>
-                    <div id="domainVariable" class="domainMain"></div>
+                    <div id="domainAllVariable" class="domainMain"></div>
                 </div>
             </div>
         </div>
@@ -126,6 +148,7 @@
                 <div id="rightDomain"></div>
             </div>
         </div>
+
     </div>
 
 

@@ -27,6 +27,7 @@ function loadSystemJson() {
     function myLoad(event) {
         try {
             myQuery.reset(JSON.parse(event.target.result));
+            myView.init();
             //should protected
             myCommonEventQuery.load();
             myMapQuery.load();
@@ -55,7 +56,7 @@ function querySwitch(switchId) {
 }
 function queryVariable(variableId) {
     let desc = eventOfVariable(variableId) + mapOfVariable(variableId);
-    if (desc === "") desc = `s[${variableId}] ${text.notFound}`;
+    if (desc === "") desc = `v[${variableId}] ${text.notFound}`;
     myView.rightAdd(desc);
 }
 
@@ -116,6 +117,19 @@ function descRowIds(rowIdAry) {
 
 
 const myView = {
+    init: function () {
+        let divAllSwitch = "";
+        myQuery.getAllSwitchs().forEach(v => {
+            divAllSwitch += this.getRow(v, "querySwitch")
+        })
+        document.getElementById("domainAllSwitch").innerHTML = divAllSwitch;
+
+        let divAllVariables = "";
+        myQuery.getAllVariables().forEach(v => {
+            divAllVariables += this.getRow(v, "queryVariable")
+        })
+        document.getElementById("domainAllVariable").innerHTML = divAllVariables;
+    },
     updateAll: function () {
         this.renderSwitch();
         this.renderVariable();
@@ -145,6 +159,10 @@ const myView = {
         textArea.cols = 100;
         textArea.appendChild(document.createTextNode(desc));
         document.getElementById("rightDomain").prepend(textArea);
+    },
+    toggleQuery: function () {
+        document.getElementById("queryMain").hidden =
+            !document.getElementById("queryMain").hidden;
     }
 }
 
@@ -159,10 +177,14 @@ const mvCode = {
         }
     },
     isVariableUsedSet: function (variableId, item) {
-        return isUsedVariable(item) && this._isIdInItemScope(variableId, item);
+        return isUsedVariable(item) && (this._isIdInItemScope(variableId, item) || isUsedAsVal());
 
         function isUsedVariable(item) {
             return item.code === 122;
+        }
+
+        function isUsedAsVal() {
+            return item.parameters[3] === 1 && item.parameters[4] === variableId;
         }
     },
     _isIdInItemScope: function (id, item) {
@@ -414,6 +436,12 @@ const myQuery = {
         switches: [],
         variables: []
     },
+    getAllSwitchs: function () {
+        return this._getAll(this._data.switches);
+    },
+    getAllVariables: function () {
+        return this._getAll(this._data.variables);
+    },
     getSwitchs: function () {
         return this._queried.switches;
     },
@@ -452,6 +480,15 @@ const myQuery = {
         if (!this._isNumber(id)) return null;
         if (!ary[Number(id)]) return null;
         return new MyVar(Number(id), ary[Number(id)]);
+    },
+    _getAll: function (ary) {
+        const result = [];
+        ary.forEach((v, k) => {
+            if (v) {
+                result.push(this._getById(ary, k));
+            }
+        });
+        return result;
     }
 };
 
