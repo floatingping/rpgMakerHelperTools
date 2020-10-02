@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .myApp {
+            width: 100%;
+            height: 850px;
+            text-align: center;
+            margin-top: 1%;
+        }
+
+        .left {
+            width: 40%;
+            background-color: #C1D4EA;
+        }
+
+        .right {
+            width: 50%;
+            background-color: #C1D4EA;
+        }
+
+        .left,
+        .right {
+            height: 100%;
+            vertical-align: top;
+        }
+
+        .leftTop {
+            height: 15%;
+        }
+
+        .leftMain {
+            height: 78%;
+        }
+        .rightMain {
+            height: 90%;
+            margin: 3%;
+            overflow: auto;
+        }
+
+        .domainMain {
+            overflow: auto;
+            background-color: #CCC;
+            height: 100%;
+        }
+
+        .domain {
+            width: 45%;
+            margin: 2%;
+            height: 95%;
+        }
+
+        .left,
+        .right,
+        .domain {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .row {
+            width: 100%;
+        }
+
+        .row:hover,
+        .row input:hover {
+            background-color: pink;
+        }
+
+        .rowId {
+            width: 15%;
+            text-align: right;
+            margin-right: 0.5em;
+        }
+
+        .rowName {
+            width: 60%;
+        }
+
+        .rowId,
+        .rowName {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="myApp">
+        <div class="left">
+            <div class="leftTop">
+                <h3>parameterQuery</h3>
+                <input id="jsons" type="file" accept=".json" hidden multiple onchange="loadSystemJson()">
+                <button
+                    onclick="document.getElementById('jsons').value='';document.getElementById('jsons').click()">Load
+                    all
+                    jsons</button>(especially for "System.json")
+                <br>
+                <br>
+                <input id="txtFindId" type="text" placeholder="id">
+                <button onclick="findId()">id search</button>&ensp;&ensp;&ensp;&ensp;&ensp;
+                <input id="txtfindKeyword" type="text" placeholder="keyword">
+                <button onclick="findKeyword()">keyword search</button>
+                <br>
+                <br>
+                <hr>
+            </div>
+            <div class="leftMain">
+                <div class="domain">
+                    switch
+                    <hr>
+                    <div id="domainSwitch" class="domainMain"></div>
+                </div>
+                <div class="domain">
+                    variable
+                    <hr>
+                    <div id="domainVariable" class="domainMain"></div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <h3>Result</h3>
+            <div class="rightMain">
+                <div id="rightDomain"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+        const text = {
+            loadFailed: "load failed.",
+            reload: "reload",
+            switch: "switch",
+            variable: "variable",
+            notFoundSystemJson: "system.json not found",
+            condition: "condition",
+            eventLine: "line",
+            notFound: "not found",
+            event: "event",
+            map: "map",
+            search: "search"
+        };
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>

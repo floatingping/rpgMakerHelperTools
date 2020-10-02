@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>TilesetCopier</title>
+    <style>
+        .leftTool {
+            text-align: left;
+            width: 20%;
+            height: 100%;
+            background-color: #C1D4EA;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .leftTopTool {
+            margin: 5%;
+            height: 15%;
+        }
+
+        .leftMiddleTool {
+            margin: 2%;
+            background-color: #DDD;
+            overflow: scroll;
+            height: 55%;
+        }
+
+        .leftBottomTool {
+            margin: 5%;
+            height: 20%;
+        }
+
+
+
+        .mainTool {
+            text-align: left;
+            width: 55%;
+            height: 100%;
+            display: inline-block;
+            vertical-align: top;
+            margin-left: 1%;
+            margin-right: 1%;
+        }
+
+        .mainTopTool {
+            padding: 2%;
+            height: 13%;
+            background-color: #C1D4EA;
+        }
+
+        .mainMiddleTool {
+            margin-top: 1%;
+            overflow: scroll;
+            background-color: #C1D4EA;
+            height: 82%;
+        }
+
+        .rightTool {
+            text-align: left;
+            width: 20%;
+            height: 100%;
+            background-color: #C1D4EA;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .rightTopTool {
+            margin: 5%;
+            height: 20%;
+        }
+
+        .rightBottomTool {
+            margin: 5%;
+            height: 20%;
+        }
+
+        .myApp {
+            width: 100%;
+            height: 850px;
+            text-align: center;
+            margin-top: 2%;
+        }
+
+        .tilesetsList li:hover {
+            background-color: #BBB;
+        }
+
+        .selected {
+            background-color: #0374E5;
+        }
+
+        .divImage {
+            margin-top: 5%;
+            margin-bottom: 5%;
+            margin-left: 10%;
+            margin-right: 5%;
+        }
+
+        .imageTitle {
+            width: 35%;
+            margin-right: 5%;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .imageTitle div {
+            margin-top: 5%;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .imageBlock {
+            max-width: 448px;
+            display: inline-block;
+            vertical-align: top;
+            background-image: url('alpha.png');
+        }
+
+        .imageSet {
+            border-style: solid;
+            width: 48px;
+            height: 48px;
+            display: inline-block;
+            vertical-align: top;
+            position: relative;
+        }
+
+        .imageSetA1Double {
+            width: 24px;
+            height: 48px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .imageSetA1Quadrant {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .imageSet img {
+            top: 0;
+            left: 0;
+            width: 48px;
+            height: 48px;
+            position: absolute;
+        }
+
+        #myrectangle {
+            border: 1px dotted #000;
+            position: absolute;
+            opacity: 0.4;
+            background-color: cornflowerblue;
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myrectangle" hidden></div>
+    <div class="myApp">
+        <div class="leftTool">
+            <div class="leftTopTool">
+                <h3>TilesetCopier</h3>
+                <input id="mainJson" type="file" accept=".json" hidden
+                    onchange="loadMainJson('please load the correct file.')">
+                <button onclick="document.getElementById('mainJson').click()">Load "Tilesets.json"</button>
+                <button id="btnTest" onclick="test()">test</button>
+                <input id="comparedJson" type="file" accept=".json"
+                    onchange="comparedJson()">
+                <br>
+                <br>
+                <button id="btnUndo" onclick="runUndo()" disabled>Undo</button>
+                <button id="btnExport" onclick="runExport()" disabled>Export</button>
+            </div>
+
+            <div class="leftMiddleTool">
+                <ul id="tilesetsList" class="tilesetsList">
+                </ul>
+            </div>
+            <div class="leftBottomTool">
+                <button id="btnCopyATileset" onclick="copyCurrentTileset()" disabled>copy selected</button>
+                <input id="importTilesetJson" type="file" accept=".json" hidden
+                    onchange="importTilesets(`enter imported indexs:\nfor exapmle: \n2\n2-3\n2,5\n1,2-3,5`,'import failed.')">
+                <button id="btnImportTilesetJson" onclick="document.getElementById('importTilesetJson').click()"
+                    disabled>import tileset(s) from</button>
+                <br>
+                <br>
+                <button id="btnAddANewTileset" onclick="addANewTileset()" disabled>add a new tileset</button>
+                <button id="btnRemoveLastTileset" onclick="removeLastTileset()" disabled>remove last tileset</button>
+            </div>
+        </div>
+        <div class="mainTool">
+            <div class="mainTopTool">
+                Name<input type="text" id="selectingName" size="30" onchange="updateCurrentTilesetName()">
+                &nbsp;&nbsp;&nbsp;Mode<select id="selectingMode" onchange="updateCurrentTilesetMode()">
+                    <option value="0">World Type</option>
+                    <option value="1">Area Type</option>
+                </select>
+                <br>
+                <br>
+                line width:<input id="lineWidth" type="range" min="0" max="5" step="1" onchange="updateViewLineWidth()"
+                    style="width:70px">
+                <br>
+                line color:<input id="colorLine" type="color" onchange="updateViewLineColor()">
+                select color:<input id="colorSelect" type="color" onchange="updateViewLineColor()">
+                <br>
+                <br>
+                <input id="chkExpandAll" type="checkbox" onchange="expandAll()">expand all/none&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isA1Show" onchange="updateViewShowImage('A1')">A1&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isA2Show" onchange="updateViewShowImage('A2')">A2&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isA3Show" onchange="updateViewShowImage('A3')">A3&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isA4Show" onchange="updateViewShowImage('A4')">A4&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isA5Show" onchange="updateViewShowImage('A5')">A5&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isBShow" onchange="updateViewShowImage('B')">B&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isCShow" onchange="updateViewShowImage('C')">C&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isDShow" onchange="updateViewShowImage('D')">D&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isEShow" onchange="updateViewShowImage('E')">E
+            </div>
+            <div class="mainMiddleTool">
+                <div id="imageBlocks"></div>
+            </div>
+
+        </div>
+        <div class="rightTool">
+            <br>
+            <br>
+            <div class="rightTopTool">
+                <button onclick="mySelecter.copy()">copy</button>
+                <button onclick="copyImageSetFromTo()">paste</button>(pick a set to paste)
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="rightBottomTool">
+                Note
+                <br>
+                <textarea id="selectingNote" rows="7" cols="40" onchange="updateCurrentTilesetNote()"></textarea>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./myTilesetYa/myTilesetYa.js"></script>
+    <script src="./myTilesetYa/test.js"></script>
+    <script src="app.js"></script>
+    <script src="drawTilesets.js"></script>
+</body>
+
+</html>
